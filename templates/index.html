@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<h1>Home</h1>
+{% endblock %}
+
+{% block body %}
+<a href="{{ links.get('List') }}">List</a>
+<a href="{{ links.get('Favorites') }}">Favorites</a>
+<a href="{{ links.get('Login') }}">Login</a>
+<a href="{{ links.get('Register') }}">Register</a>
+{% endblock %}
