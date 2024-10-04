@@ -1,6 +1,5 @@
 
 from flask import Blueprint, render_template, url_for, redirect, request, session
-#from flask_session import Session
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import db, Users, Movies_Shows, Favorites
 
