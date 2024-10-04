@@ -6,4 +6,12 @@
 
 {% block body %}
 
+<form method="POST" action="register_input">
+    <input type="text" name="username" placeholder="Username" min="1" maxlength="20" required/>
+    <br>
+    <input type="password" name="password" placeholder="Password" min="1" maxlength="20" required/>
+    <br>
+    <input type="submit" name="submit" value="submit"/>
+</form>
+
 {% endblock %}

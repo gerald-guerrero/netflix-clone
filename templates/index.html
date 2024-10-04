@@ -5,8 +5,20 @@
 {% endblock %}
 
 {% block body %}
-<a href="{{ links.get('List') }}">List</a>
-<a href="{{ links.get('Favorites') }}">Favorites</a>
-<a href="{{ links.get('Login') }}">Login</a>
-<a href="{{ links.get('Register') }}">Register</a>
+    {% if session.name %}
+        Hello {{ session.name }}
+        <br>
+        <a href="{{ links.get('logout') }}">Logout</a>
+        <br>
+    {% else %}
+        <a href="{{ links.get('login') }}">Login</a>
+        <br>
+        <a href="{{ links.get('register') }}">Register</a>
+        <br>
+    {% endif %}
+    <br>
+    <a href="{{ links.get('list') }}">List</a>
+    <br>
+    <a href="{{ links.get('favorites') }}">Favorites</a>
+
 {% endblock %}

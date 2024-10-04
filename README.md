@@ -4,6 +4,10 @@ This repository serves as a simplified clone of Netflix. Its purpose is to have 
 # Deployment Instructions
 
 1. Clone the repository and navigate to its location in your file directory
+2. Generate a SECRET_KEY variable and save it to a .env file with the format: SECRET_KEY="secret key here". You can do this with the command below or another method of your choosing
+   for Mac and linux (WSL on windows systems): `echo "SECRET_KEY=\"$(python3 -c 'import secrets; print(secrets.token_hex(24))')\"" >> .env`
+   for windows powershell: `echo "SECRET_KEY=""$(python3 -c 'import secrets; print(secrets.token_hex(24))')""" >> .env`
+   Open the .env to ensure the key was generated in the proper format
 2. Install virtual environment with the command
    `pip3 install virtualenv` or `pip install virtualenv`
 3. While in the repository directory, create the virtual environment with the command
