@@ -1,9 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="/static/style.css">
     {% block head %}{% endblock %}
 </head>
 <body>
-    {% block body %}{% endblock %}
+    <header>
+        <div id="homepage">
+            <a class="link" href="{{ url_for('pages.index') }}">Netflix</a>
+        </div>
+        <div id="topmenu">
+            {% if session.name %}
+                Hello {{ session.name }}
+                <a class="link" href="{{ url_for('pages.logout') }}">Logout</a>
+            {% else %}
+                <a class="link" href="{{ url_for('pages.login') }}">Login</a>
+                <a class="link"href="{{ url_for('pages.register') }}">Register</a>
+            {% endif %}
+        </div> 
+    </header>
+    <br>
+    {% block menu %}
+    <div id="menu">
+        <ul>
+            <li><a class="link" href="{{ url_for('pages.list') }}">Catalog</a></li>
+            <li><a class="link" href="{{ url_for('pages.favorites') }}">Favorites</a></li>
+        </ul>
+    </div>
+    {% endblock %}
+    <div id="content">
+        {% block body %}{% endblock %}
+    </div>
 </body>
 </html>

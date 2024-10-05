@@ -1,0 +1,62 @@
+header {
+    background-color: rgba(139,3,3,255);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+body {
+    background-color: rgba(58,53,49,255);
+}
+
+.link {
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 30px;
+    text-decoration: none;
+    text-shadow: 1px 1px 2px black;
+    padding-right: max;
+    transition: all 0.2s ease;
+}
+
+.link:hover {
+    background-color: beige;
+}
+
+#homepage {
+    font-size: xx-large;
+}
+
+#topmenu {
+    margin-right: 10px;
+    font-size: large;
+}
+
+#topmenu a {
+    padding-left: 10px;
+    padding-right: 10px;
+
+}
+
+#menu {
+    float: left;
+    width: 20%;
+    font-size: x-large;
+    background-color: rgba(131,128,123,255);
+    
+}
+
+#menu ul {
+    list-style: none;
+}
+
+#content {
+    float: left;
+    padding-left: 10px;
+    max-width: 50%;
+}
+
+h1 {
+    margin-top: 0;
+}

@@ -1,11 +1,15 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<h1>Register</h1>
+{% endblock %}
+
+{% block menu %}
+{# overriding menu block from base.html so the page links do not show on registration page #}
 {% endblock %}
 
 {% block body %}
-
+<h1>Register</h1>
+<br>
 <form method="POST" action="register_input">
     <input type="text" name="username" placeholder="Username" min="1" maxlength="20" required/>
     <br>

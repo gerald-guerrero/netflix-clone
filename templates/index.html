@@ -1,24 +1,10 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<h1>Home</h1>
 {% endblock %}
 
 {% block body %}
-    {% if session.name %}
-        Hello {{ session.name }}
-        <br>
-        <a href="{{ links.get('logout') }}">Logout</a>
-        <br>
-    {% else %}
-        <a href="{{ links.get('login') }}">Login</a>
-        <br>
-        <a href="{{ links.get('register') }}">Register</a>
-        <br>
-    {% endif %}
-    <br>
-    <a href="{{ links.get('list') }}">List</a>
-    <br>
-    <a href="{{ links.get('favorites') }}">Favorites</a>
+    <h1>Homepage</h1>
 
 {% endblock %}
+
