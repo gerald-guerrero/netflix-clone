@@ -5,5 +5,13 @@
 
 {% block body %}
 <h1>Full Catalog</h1>
-<p>{{ Movies_Shows }}</p>
+<br>
+<div id="catalog"></div>
+{% for entry in Movies_Shows %}
+    <a href="{{ url_for('pages.detail', media_id=entry.id) }}">
+        <div id="{{ entry.id }}" class="catalog_entry">{{ entry.title }}</div>
+    </a>
+{% endfor %}
+</div>
+
 {% endblock %}

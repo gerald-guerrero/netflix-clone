@@ -14,9 +14,7 @@ body {
     font-weight: bold;
     text-align: center;
     border-radius: 30px;
-    text-decoration: none;
     text-shadow: 1px 1px 2px black;
-    padding-right: max;
     transition: all 0.2s ease;
 }
 
@@ -44,19 +42,52 @@ body {
     width: 20%;
     font-size: x-large;
     background-color: rgba(131,128,123,255);
-    
+    margin-top: 5px;
 }
 
-#menu ul {
+ul {
     list-style: none;
 }
 
 #content {
     float: left;
+    width: 70%;
     padding-left: 10px;
-    max-width: 50%;
+    margin-left: 10px;
 }
 
-h1 {
+h1, h2 {
     margin-top: 0;
+}
+
+.catalog_entry {
+    float: left;
+    color: white;
+    background-color: black;
+    font-size: x-large;
+    border: 1px solid black;
+    padding: 10px;
+    margin: 10px;
+    width: 150px;
+    text-align: center;
+    height: 200px;
+}
+
+.catalog_entry:hover {
+    background-color: gray;
+}
+
+a {
+    text-decoration: none;
+}
+
+
+@media screen and (max-width: 750px) {
+    #menu {
+        width: 100%;
+    }
+    #content {
+        padding-top: 10px;
+        width: 100%;
+    }
 }

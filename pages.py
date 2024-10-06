@@ -11,8 +11,8 @@ def index():
     route for homepage and serves as main directory for app containing links for relevant pages
     can be accessed without being signed in
     """
-    links = {"home": url_for("pages.index"), "login": url_for("pages.login"), "register": url_for("pages.register"), "logout": url_for("pages.logout"), "list": url_for("pages.list"), "details": url_for("pages.detail"), "favorites": url_for("pages.favorites")}
-    return render_template("index.html", links = links)
+    
+    return render_template("index.html")
 
 @pages.route("/login")
 def login():
@@ -97,19 +97,23 @@ def list():
     movies_shows = Movies_Shows.query.all()
     movies_shows_list = []
     for entry in movies_shows:
-        entry_dict = {'id': entry.id, 'title': entry.title, 'genre': entry.genre, 'description': entry.description, 'release_date': entry.release_date, 'duration': entry.duration}
+        entry_dict = {'id': entry.id, 'title': entry.title}
         movies_shows_list.append(entry_dict)
     return render_template("list.html", Movies_Shows = movies_shows_list)
 
-@pages.route("/detail")
-def detail():
+@pages.route("/detail/<int:media_id>")
+def detail(media_id):
     """
     route for detail page that shows the complete information for the selected movie
     only accessible when logged in by checking if session has the "name" attribute
     """
     if "name" not in session:
         return redirect(url_for("pages.index"))
-    return render_template("detail.html")
+    
+    entry = Movies_Shows.query.filter_by(id=media_id).first()
+    movie_show = {'id': entry.id, 'title': entry.title, 'genre': entry.genre, 'description': entry.description, 'release_date': entry.release_date, 'duration': entry.duration}
+    print(movie_show)
+    return render_template("detail.html", movie_show = movie_show)
 
 @pages.route("/favorites")
 def favorites():
