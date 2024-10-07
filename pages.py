@@ -38,6 +38,7 @@ def login_input():
     if user_db and check_password_hash(user_db.password, password_input):
         print("correct username and login")
         session["name"] = user_db.username
+        session["watch_history"] = []
     else:
         print("incorrect username or password")
         return redirect(url_for("pages.login"))
@@ -83,6 +84,7 @@ def logout():
     logs out by removing "name" attribute from session["name"]
     """
     session.pop("name", None)
+    session.pop("watch_history", None)
     return redirect(url_for("pages.index"))
 
 @pages.route("/list")
@@ -98,48 +100,12 @@ def list():
     page_title = "Full Catalog"
     return render_template("list.html", catalog = movies_shows, page_title = page_title)
 
-@pages.route("/detail/<int:media_id>")
-def detail(media_id):
-    """
-    route for detail page that shows the complete information for the selected movie
-    only accessible when logged in by checking if session has the "name" attribute
-    """
-    if "name" not in session:
-        return redirect(url_for("pages.login"))
-    
-    entry = Movies_Shows.query.filter_by(id=media_id).first()
-    movie_show = {'id': entry.id, 'title': entry.title, 'genre': entry.genre, 'description': entry.description, 'release_date': entry.release_date, 'duration': entry.duration}
-    print(movie_show)
-    return render_template("detail.html", movie_show = movie_show)
-
-@pages.route("/favorites")
-def favorites():
-    """
-    route for favorites page that shows the list of favorites for the current user
-    only accessible when logged in by checking if session has the "name" attribute
-    """
-    if "name" not in session:
-        return redirect(url_for("pages.login"))
-    
-    return render_template("favorites.html")
-
-@pages.route("/title", methods=["GET"])
-def title(title_input=None):
-    """
-    
-    """
-    
-    if "name" not in session:
-        return redirect(url_for("pages.login"))
-
-    title_input = request.args.get("title_input")
-    print(title_input)
-    return redirect(url_for("pages.listFiltered", filter="title", name=title_input))
-
 @pages.route("/list/<filter>+<name>")
 def listFiltered(filter, name):
     """
-    
+    Finds entries from Movies_Shows model based on the provided filter type and name
+    The function can query the database for entries that contain the provided name input, or
+    it can filter by the given genre if the genre type filter is given
     """
     if "name" not in session:
         return redirect(url_for("pages.login"))
@@ -154,3 +120,90 @@ def listFiltered(filter, name):
 
     print(movies_shows.count())
     return render_template("list.html", catalog=movies_shows, page_title = page_title)
+
+@pages.route("/title", methods=["GET"])
+def title():
+    """
+    When the submit button is clicked for the page menu, the text input is retrieved, the filter
+    is set to "title", and the page is redirected to listFiltered to search for the given title
+    """
+    
+    if "name" not in session:
+        return redirect(url_for("pages.login"))
+
+    title_input = request.args.get("title_input")
+    print(title_input)
+    return redirect(url_for("pages.listFiltered", filter="title", name=title_input))
+
+@pages.route("/detail/<int:movies_shows_id>")
+def detail(movies_shows_id):
+    """
+    route for detail page that shows the complete information for the selected movie
+    only accessible when logged in by checking if session has the "name" attribute
+    """
+    if "name" not in session:
+        return redirect(url_for("pages.login"))
+    
+    movie_show = Movies_Shows.query.filter_by(id=movies_shows_id).first()
+    
+    if(Favorites.query.filter_by(username=session["name"], movie_id = movies_shows_id).first()):
+        print("Is in Favorites")
+        isFavorite = True
+        favoriteLabel = "Remove from Favorites"
+    else:
+        print("Not in favorites")
+        isFavorite = False
+        favoriteLabel = "Add to Favorites"
+    
+
+    if "watch_history" in session:
+        session["watch_history"].insert(0, {"id": movie_show.id, "title": movie_show.title})
+        print(session["watch_history"])
+
+    return render_template("detail.html", movie_show = movie_show, isFavorite = isFavorite, favoriteLabel = favoriteLabel)
+
+@pages.route("/favoritesUpdate/<isFavorite>+<int:movies_shows_id>")
+def favoritesUpdate(movies_shows_id, isFavorite):
+    """
+    Connected to favorites button on the "/detail" page. Checks if the current movie or show is
+    already in the current user's favorites with the isFavorite variable provided in the "/detail
+    route. The current movie or show is added or removed accordingly based on this
+    """
+    if "name" not in session:
+        return redirect(url_for("pages.login"))
+
+    if (isFavorite == "True"):
+        print("Media will be removed from favorites")
+        Favorites.query.filter_by(username=session["name"], movie_id = movies_shows_id).delete()
+    elif (isFavorite == "False"):
+        print("media will be added to favorites")
+        favEntry = Favorites(movie_id = movies_shows_id, username=session["name"])
+        db.session.add(favEntry)
+    db.session.commit()
+    return redirect(url_for("pages.detail", movies_shows_id = movies_shows_id))
+
+@pages.route("/favorites")
+def favorites():
+    """
+    route for favorites page that shows the list of favorites for the current user
+    only accessible when logged in by checking if session has the "name" attribute
+    """
+    if "name" not in session:
+        return redirect(url_for("pages.login"))
+    
+    favorites = Favorites.query.filter_by(username=session["name"]).all()
+    movies_shows = []
+    for entry in favorites:
+        movies_shows.append(Movies_Shows.query.filter_by(id = entry.movie_id).first())
+    return render_template("list.html", catalog = movies_shows, page_title = "Favorites")
+
+
+@pages.route("/history")
+def history():
+    """
+    
+    """
+    if "name" not in session:
+        return redirect(url_for("pages.login"))
+    
+    return render_template("history.html")

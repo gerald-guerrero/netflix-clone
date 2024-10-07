@@ -8,7 +8,7 @@
 <br>
 <div id="catalog"></div>
 {% for entry in catalog %}
-    <a href="{{ url_for('pages.detail', media_id=entry.id) }}">
+    <a href="{{ url_for('pages.detail', movies_shows_id=entry.id) }}">
         <div id="{{ entry.id }}" class="catalog_entry">{{ entry.title }}</div>
     </a>
 {% endfor %}
