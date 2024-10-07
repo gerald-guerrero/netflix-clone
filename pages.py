@@ -145,8 +145,8 @@ def detail(movies_shows_id):
         return redirect(url_for("pages.login"))
     
     movie_show = Movies_Shows.query.filter_by(id=movies_shows_id).first()
-    
-    if(Favorites.query.filter_by(username=session["name"], movie_id = movies_shows_id).first()):
+    user = Users.query.filter_by(username=session["name"]).first()
+    if(user.favorites.filter_by(movies_shows_id=movies_shows_id).first()):
         print("Is in Favorites")
         isFavorite = True
         favoriteLabel = "Remove from Favorites"
@@ -172,12 +172,13 @@ def favoritesUpdate(movies_shows_id, isFavorite):
     if "name" not in session:
         return redirect(url_for("pages.login"))
 
+    user = Users.query.filter_by(username=session["name"]).first()
     if (isFavorite == "True"):
         print("Media will be removed from favorites")
-        Favorites.query.filter_by(username=session["name"], movie_id = movies_shows_id).delete()
+        user.favorites.filter_by(movies_shows_id=movies_shows_id).delete()
     elif (isFavorite == "False"):
         print("media will be added to favorites")
-        favEntry = Favorites(movie_id = movies_shows_id, username=session["name"])
+        favEntry = Favorites(user_id=user.id, movies_shows_id = movies_shows_id)
         db.session.add(favEntry)
     db.session.commit()
     return redirect(url_for("pages.detail", movies_shows_id = movies_shows_id))
@@ -191,17 +192,19 @@ def favorites():
     if "name" not in session:
         return redirect(url_for("pages.login"))
     
-    favorites = Favorites.query.filter_by(username=session["name"]).all()
+    user = Users.query.filter_by(username=session["name"]).first()
+    favorites = user.favorites.all()
     movies_shows = []
     for entry in favorites:
-        movies_shows.append(Movies_Shows.query.filter_by(id = entry.movie_id).first())
+        movies_shows.append(Movies_Shows.query.filter_by(id = entry.movies_shows_id).first())
     return render_template("list.html", catalog = movies_shows, page_title = "Favorites")
 
 
 @pages.route("/history")
 def history():
     """
-    
+    Displays a list of links from session["watch_history] based on the movies_shows entries
+    that were clicked
     """
     if "name" not in session:
         return redirect(url_for("pages.login"))
