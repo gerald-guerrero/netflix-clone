@@ -92,14 +92,11 @@ def list():
     only accessible when logged in by checking if session has the "name" attribute
     """
     if "name" not in session:
-        return redirect(url_for("pages.index"))
-        
+        return redirect(url_for("pages.login"))
+     
     movies_shows = Movies_Shows.query.all()
-    movies_shows_list = []
-    for entry in movies_shows:
-        entry_dict = {'id': entry.id, 'title': entry.title}
-        movies_shows_list.append(entry_dict)
-    return render_template("list.html", Movies_Shows = movies_shows_list)
+    page_title = "Full Catalog"
+    return render_template("list.html", catalog = movies_shows, page_title = page_title)
 
 @pages.route("/detail/<int:media_id>")
 def detail(media_id):
@@ -108,7 +105,7 @@ def detail(media_id):
     only accessible when logged in by checking if session has the "name" attribute
     """
     if "name" not in session:
-        return redirect(url_for("pages.index"))
+        return redirect(url_for("pages.login"))
     
     entry = Movies_Shows.query.filter_by(id=media_id).first()
     movie_show = {'id': entry.id, 'title': entry.title, 'genre': entry.genre, 'description': entry.description, 'release_date': entry.release_date, 'duration': entry.duration}
@@ -122,5 +119,38 @@ def favorites():
     only accessible when logged in by checking if session has the "name" attribute
     """
     if "name" not in session:
-        return redirect(url_for("pages.index"))
+        return redirect(url_for("pages.login"))
+    
     return render_template("favorites.html")
+
+@pages.route("/title", methods=["GET"])
+def title(title_input=None):
+    """
+    
+    """
+    
+    if "name" not in session:
+        return redirect(url_for("pages.login"))
+
+    title_input = request.args.get("title_input")
+    print(title_input)
+    return redirect(url_for("pages.listFiltered", filter="title", name=title_input))
+
+@pages.route("/list/<filter>+<name>")
+def listFiltered(filter, name):
+    """
+    
+    """
+    if "name" not in session:
+        return redirect(url_for("pages.login"))
+    
+
+    if (filter == "title"):
+        movies_shows = Movies_Shows.query.filter(Movies_Shows.title.like(f"%{name}%"))
+        page_title = "Search Results For: " + name
+    elif(filter == "genre"):
+        movies_shows = Movies_Shows.query.filter_by(genre = name)
+        page_title = "Filtered By Genre: " + name
+
+    print(movies_shows.count())
+    return render_template("list.html", catalog=movies_shows, page_title = page_title)

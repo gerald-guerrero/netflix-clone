@@ -4,10 +4,10 @@
 {% endblock %}
 
 {% block body %}
-<h1>Full Catalog</h1>
+<h1>{{ page_title }}</h1>
 <br>
 <div id="catalog"></div>
-{% for entry in Movies_Shows %}
+{% for entry in catalog %}
     <a href="{{ url_for('pages.detail', media_id=entry.id) }}">
         <div id="{{ entry.id }}" class="catalog_entry">{{ entry.title }}</div>
     </a>

@@ -25,6 +25,37 @@
         <ul>
             <li><a class="link" href="{{ url_for('pages.list') }}">Catalog</a></li>
             <li><a class="link" href="{{ url_for('pages.favorites') }}">Favorites</a></li>
+            <li>
+                <div class="genre-dropdown">
+                    <label class="genre-label">Genres</label>
+                    <br>
+                    <div class="genre-links">
+                        <a class="link" href="{{ url_for('pages.listFiltered', filter='genre', name='Action')}}">Action</a>
+                        <br>
+                        <a class="link" href="{{ url_for('pages.listFiltered', filter='genre', name='Sci-Fi')}}">Sci-fi</a>
+                        <br>
+                        <a class="link" href="{{ url_for('pages.listFiltered', filter='genre', name='Drama')}}">Drama</a>
+                        <br>
+                        <a class="link" href="{{ url_for('pages.listFiltered', filter='genre', name='Romance')}}">Romance</a>
+                        <br>
+                        <a class="link" href="{{ url_for('pages.listFiltered', filter='genre', name='Fantasy')}}">Fantasy</a>
+                        <br>
+                        <a class="link" href="{{ url_for('pages.listFiltered', filter='genre', name='Crime')}}">Crime</a>
+                        <br>
+                        <a class="link" href="{{ url_for('pages.listFiltered', filter='genre', name='Comedy')}}">Comedy</a>
+                        <br>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <form action="{{ url_for('pages.title') }}" method="GET">
+                    <input required type="text" class="title_input" name="title_input" min="1" placeholder="Search by title"/>
+                    <br>
+                    <input type="submit"/>
+                </form>
+                
+            </li>
+            
         </ul>
     </div>
     {% endblock %}
