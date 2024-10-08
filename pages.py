@@ -1,5 +1,5 @@
 
-from flask import Blueprint, render_template, url_for, redirect, request, session
+from flask import Blueprint, render_template, url_for, redirect, request, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import db, Users, Movies_Shows, Favorites
 
@@ -34,13 +34,13 @@ def login_input():
     password_input = request.form.get("password")
 
     user_db = Users.query.filter_by(username=username_input).first()
-
+    
     if user_db and check_password_hash(user_db.password, password_input):
-        print("correct username and login")
+        flash("You are now logged in")
         session["name"] = user_db.username
         session["watch_history"] = []
     else:
-        print("incorrect username or password")
+        flash("Incorrect credentials")
         return redirect(url_for("pages.login"))
 
     return redirect(url_for("pages.index"))
@@ -65,14 +65,14 @@ def register_input():
     password_hashed = generate_password_hash(password_input)
 
     user_db = Users.query.filter_by(username=username_input).first()
-    print(username_input, password_hashed)
+
     if user_db is None:
-        print("User can be registered")
+        flash("User is now registered")
         user = Users(username = username_input, password = password_hashed)
         db.session.add(user)
         db.session.commit()
     else:
-        print("user alerady exists")
+        flash("User already exists")
         return redirect(url_for("pages.register"))
         
     return redirect(url_for("pages.index"))
@@ -118,7 +118,6 @@ def listFiltered(filter, name):
         movies_shows = Movies_Shows.query.filter_by(genre = name)
         page_title = "Filtered By Genre: " + name
 
-    print(movies_shows.count())
     return render_template("list.html", catalog=movies_shows, page_title = page_title)
 
 @pages.route("/title", methods=["GET"])
@@ -132,7 +131,7 @@ def title():
         return redirect(url_for("pages.login"))
 
     title_input = request.args.get("title_input")
-    print(title_input)
+
     return redirect(url_for("pages.listFiltered", filter="title", name=title_input))
 
 @pages.route("/detail/<int:movies_shows_id>")

@@ -5,8 +5,14 @@
 
 {% block body %}
     <h1>Homepage</h1>
-    <p>Welcome to Netflix! Login to see the full catalog of movies and shows!</p>
+    <p>Welcome to Netflix! Check out our full catalog of movies and shows!</p>
     
-    <p>{{ message }}</p>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 {% endblock %}
 
