@@ -11,6 +11,6 @@
     <li><p>Description: {{ movie_show.description }}</p></li>
     <li><p>Release Date: {{ movie_show.release_date }}</p></li>
     <li><p>Duration: {{ movie_show.duration }} minutes</p></li>
-    <li><a href="{{ url_for('pages.favoritesUpdate', movies_shows_id=movie_show.id, isFavorite=isFavorite) }}"><button>{{ favoriteLabel }}</button></a></li>
+    <li><a href="{{ url_for('pages.favoritesUpdate', movies_shows_id=movie_show.id) }}"><button>{{ favoriteLabel }}</button></a></li>
 </ul>
 {% endblock %}

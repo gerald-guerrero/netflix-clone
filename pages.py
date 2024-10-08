@@ -147,39 +147,41 @@ def detail(movies_shows_id):
     user = Users.query.filter_by(username=session["name"]).first()
     if(user.favorites.filter_by(movies_shows_id=movies_shows_id).first()):
         print("Is in Favorites")
-        isFavorite = True
         favoriteLabel = "Remove from Favorites"
     else:
         print("Not in favorites")
-        isFavorite = False
         favoriteLabel = "Add to Favorites"
-    
 
     if "watch_history" in session:
         session["watch_history"].insert(0, {"id": movie_show.id, "title": movie_show.title})
         print(session["watch_history"])
 
-    return render_template("detail.html", movie_show = movie_show, isFavorite = isFavorite, favoriteLabel = favoriteLabel)
+    return render_template("detail.html", movie_show = movie_show, favoriteLabel = favoriteLabel)
 
-@pages.route("/favoritesUpdate/<isFavorite>+<int:movies_shows_id>")
-def favoritesUpdate(movies_shows_id, isFavorite):
+@pages.route("/favoritesUpdate/<int:movies_shows_id>")
+def favoritesUpdate(movies_shows_id):
     """
     Connected to favorites button on the "/detail" page. Checks if the current movie or show is
-    already in the current user's favorites with the isFavorite variable provided in the "/detail
-    route. The current movie or show is added or removed accordingly based on this
+    already in the current user's favorites with the provided movies_shows_id. The current movie 
+    or show is added or removed accordingly based on this. 
+    The first entry in the watch history is removed to prevent favoritesUpdate from creating a 
+    duplicate entry. The entry will be added again when pages.detail is reloaded
     """
     if "name" not in session:
         return redirect(url_for("pages.login"))
 
     user = Users.query.filter_by(username=session["name"]).first()
-    if (isFavorite == "True"):
+    if (user.favorites.filter_by(movies_shows_id=movies_shows_id).first()):
         print("Media will be removed from favorites")
         user.favorites.filter_by(movies_shows_id=movies_shows_id).delete()
-    elif (isFavorite == "False"):
+    else:
         print("media will be added to favorites")
         favEntry = Favorites(user_id=user.id, movies_shows_id = movies_shows_id)
         db.session.add(favEntry)
+    
     db.session.commit()
+    session["watch_history"].pop(0)
+
     return redirect(url_for("pages.detail", movies_shows_id = movies_shows_id))
 
 @pages.route("/favorites")
