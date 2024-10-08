@@ -1,108 +1,51 @@
-header {
-    background-color: rgba(139,3,3,255);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
 body {
     background-color: rgba(58,53,49,255);
 }
 
-h1, h2 {
-    margin-top: 0;
+.navbar-custom {
+    background-color: rgba(139,3,3,255);
 }
 
-a {
-    text-decoration: none;
+.navbar-custom .navbar-brand, h1{
+    color: white;
+    text-shadow: 1px 1px 2px black;
+    font-size: xx-large;
+}
+
+h2 {
+    color: white;
+    text-shadow: 1px 1px 2px black;
+    font-size: x-large;
+}
+
+.nav .navbar-text {
+    color: white;
+    text-shadow: 1px 1px 2px black;
+    margin-right: 10px;
+}
+
+a, p {
+    color: white;
+    text-shadow: 1px 1px 2px black;
+    font-size: large;
+}
+
+a:hover {
+    color: lightgrey;
 }
 
 ul {
     list-style: none;
 }
 
-li {
-    margin-top: 10px;
-    
-}
-
-.link, .genre-label {
-    color: white;
-    font-weight: bold;
-    text-align: center;
-    border-radius: 30px;
-    text-shadow: 1px 1px 2px black;
-    transition: all 0.2s ease;
-}
-
-.link:hover, .genre-label:hover {
-    background-color: beige;
-}
-
-#homepage {
-    font-size: xx-large;
-}
-
-#topmenu {
-    margin-right: 10px;
-    font-size: large;
-}
-
-#topmenu a {
-    padding-left: 10px;
-    padding-right: 10px;
-
-}
-
-#menu {
-    float: left;
-    width: 25%;
-    font-size: x-large;
+#menu {    
     background-color: rgba(131,128,123,255);
-    margin-top: 5px;
-}
-
-.history-link {
-    color: white;
-    font-weight: bold;
-    font-size: large;
-    text-decoration-line: underline;
-    border-radius: 30px;
-    text-shadow: 1px 1px 2px black;
-}
-
-.genre-links {
-    display: none;
-}
-
-.genre-links a{
-    padding: 5px;
-    margin: 10px;
-    text-decoration-line: underline;
-}
-
-.genre-dropdown:hover .genre-links{
-    display: block;
-}
-
-
-.title_input {
-    display: inline-block;
+    margin-top: 10px;
 }
 
 .title_input {
-    max-width: 85%;
+    max-width: 80%;
 }
-
-
-
-#content {
-    float: left;
-    width: 70%;
-    padding-left: 10px;
-    margin-left: 10px;
-}
-
 
 
 .catalog_entry {
@@ -120,16 +63,4 @@ li {
 
 .catalog_entry:hover {
     background-color: gray;
-}
-
-
-
-@media screen and (max-width: 750px) {
-    #menu {
-        width: 100%;
-    }
-    #content {
-        padding-top: 10px;
-        width: 100%;
-    }
 }

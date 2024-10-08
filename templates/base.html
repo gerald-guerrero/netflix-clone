@@ -1,67 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/static/style.css">
     {% block head %}{% endblock %}
 </head>
 <body>
     <header>
-        <div id="homepage">
-            <a class="link" href="{{ url_for('pages.index') }}">Netflix</a>
-        </div>
-        <div id="topmenu">
-            {% if session.name %}
-                Hello {{ session.name }}
-                <a class="link" href="{{ url_for('pages.logout') }}">Logout</a>
-            {% else %}
-                <a class="link" href="{{ url_for('pages.login') }}">Login</a>
-                <a class="link"href="{{ url_for('pages.register') }}">Register</a>
-            {% endif %}
-        </div> 
+        <nav id="topnav" class="navbar navbar-expand-lg navbar-dark navbar-custom">
+            <a class="navbar-brand" href="{{ url_for('pages.index') }}">Netflix</a>
+            <div class="nav ml-auto">
+                {% if session.name %}
+                    <p class="navbar-text">Hello {{ session.name }}</p>
+                    <a class="nav-item nav-link" href="{{ url_for('pages.logout') }}">Logout</a>
+                {% else %}
+                    <a class="nav-item nav-link" href="{{ url_for('pages.login') }}">Login</a>
+                    <a class="nav-item nav-link"href="{{ url_for('pages.register') }}">Register</a>
+                {% endif %}
+            </div>
+        </nav>
+        
     </header>
-    <br>
-    {% block menu %}
-    <div id="menu">
-        <ul>
-            <li><a class="link" href="{{ url_for('pages.list') }}">Catalog</a></li>
-            <li><a class="link" href="{{ url_for('pages.favorites') }}">Favorites</a></li>
-            <li><a class="link" href="{{ url_for('pages.history') }}">Watch History</a></li>
-            <li>
-                <div class="genre-dropdown">
-                    <label class="genre-label">Genres</label>
-                    <br>
-                    <div class="genre-links">
-                        <a class="link" href="{{ url_for('pages.listFiltered', filter='genre', name='Action')}}">Action</a>
-                        <br>
-                        <a class="link" href="{{ url_for('pages.listFiltered', filter='genre', name='Sci-Fi')}}">Sci-fi</a>
-                        <br>
-                        <a class="link" href="{{ url_for('pages.listFiltered', filter='genre', name='Drama')}}">Drama</a>
-                        <br>
-                        <a class="link" href="{{ url_for('pages.listFiltered', filter='genre', name='Romance')}}">Romance</a>
-                        <br>
-                        <a class="link" href="{{ url_for('pages.listFiltered', filter='genre', name='Fantasy')}}">Fantasy</a>
-                        <br>
-                        <a class="link" href="{{ url_for('pages.listFiltered', filter='genre', name='Crime')}}">Crime</a>
-                        <br>
-                        <a class="link" href="{{ url_for('pages.listFiltered', filter='genre', name='Comedy')}}">Comedy</a>
-                        <br>
-                    </div>
-                </div>
-            </li>
-            <li>
-                <form action="{{ url_for('pages.title') }}" method="GET">
-                    <input required type="text" class="title_input" name="title_input" min="1" placeholder="Search by title"/>
-                    <br>
-                    <input type="submit"/>
-                </form>
-                
-            </li>
-            
-        </ul>
-    </div>
-    {% endblock %}
-    <div id="content">
-        {% block body %}{% endblock %}
+    
+    
+    <div class="container">
+        <div class="row justify-content-start">
+            {% block menu %}
+            <div id="menu" class="col-md-3">
+                <ul class="nav flex-column">
+                    <li nav-item>
+                        <a class="nav-link pl-0" href="{{ url_for('pages.list') }}">Catalog</a>
+                    </li>
+                    <li nav-item>
+                        <a class="nav-link pl-0" href="{{ url_for('pages.favorites') }}">Favorites</a>
+                    </li>
+                    <li nav-item>
+                        <a class="nav-link pl-0" href="{{ url_for('pages.history') }}">Watch History</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle pl-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria="false">Genres</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{{ url_for('pages.listFiltered', filter='genre', name='Action')}}">Action</a>
+                            <a class="dropdown-item" href="{{ url_for('pages.listFiltered', filter='genre', name='Sci-Fi')}}">Sci-fi</a>
+                            <a class="dropdown-item" href="{{ url_for('pages.listFiltered', filter='genre', name='Drama')}}">Drama</a>
+                            <a class="dropdown-item" href="{{ url_for('pages.listFiltered', filter='genre', name='Romance')}}">Romance</a>
+                            <a class="dropdown-item" href="{{ url_for('pages.listFiltered', filter='genre', name='Fantasy')}}">Fantasy</a>
+                            <a class="dropdown-item" href="{{ url_for('pages.listFiltered', filter='genre', name='Crime')}}">Crime</a>
+                            <a class="dropdown-item" href="{{ url_for('pages.listFiltered', filter='genre', name='Comedy')}}">Comedy</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <form class="pl-0" action="{{ url_for('pages.title') }}" method="GET">
+                            <input required type="text" class="title_input" name="title_input" min="1" placeholder="Search by title"/>
+                            <br>
+                            <input type="submit"/>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            {% endblock %}
+            <div id="content" class="col-md-9">
+                {% block body %}{% endblock %}
+            </div>
+        </div>
     </div>
 </body>
 </html>

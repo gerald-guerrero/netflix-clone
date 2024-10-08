@@ -7,10 +7,10 @@
 <h1>Details</h1>
 <h2>{{ movie_show.title }}</h2>
 <ul>
-    <li>Genre: {{ movie_show.genre }}</li>
-    <li>Description: {{ movie_show.description }}</li>
-    <li>Release Date: {{ movie_show.release_date }}</li>
-    <li>Duration: {{ movie_show.duration }} minutes</li>
+    <li><p>Genre: {{ movie_show.genre }}</p></li>
+    <li><p>Description: {{ movie_show.description }}</p></li>
+    <li><p>Release Date: {{ movie_show.release_date }}</p></li>
+    <li><p>Duration: {{ movie_show.duration }} minutes</p></li>
     <li><a href="{{ url_for('pages.favoritesUpdate', movies_shows_id=movie_show.id, isFavorite=isFavorite) }}"><button>{{ favoriteLabel }}</button></a></li>
 </ul>
 {% endblock %}
