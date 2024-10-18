@@ -64,3 +64,17 @@ ul {
 .catalog_entry:hover {
     background-color: gray;
 }
+
+.tooltips {
+    color: white;
+    background-color: black;
+    font-weight: bold;
+    padding: 10px;
+    margin: 5px;
+    height: 30px;
+    width: 30px;
+    border-radius: 100%;
+    display:inline-flex;
+    justify-content:center;
+    align-items:center
+}

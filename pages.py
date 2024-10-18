@@ -75,7 +75,7 @@ def register_input():
         flash("User already exists")
         return redirect(url_for("pages.register"))
         
-    return redirect(url_for("pages.index"))
+    return redirect(url_for("pages.login"))
 
 @pages.route("/logout")
 def logout():

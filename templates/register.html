@@ -11,9 +11,11 @@
 <h1>Register</h1>
 <br>
 <form method="POST" action="register_input">
-    <input type="text" name="username" placeholder="Username" min="1" maxlength="20" required/>
+    <input type="text" name="username" placeholder="Username" minlength="5" maxlength="25" pattern="((?=.*[A-Z])(?=.*[a-z])).+" autocomplete="off" required/>
+    <span class="tooltips" title="Username must include 1 uppercase letter, 1 lower case letter, and at least 5 characters">?</span>
     <br>
-    <input type="password" name="password" placeholder="Password" min="1" maxlength="20" required/>
+    <input type="password" name="password" placeholder="Password" minlength="8" maxlength="25" pattern="((?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])).+" autocomplete="off" required/>
+    <span class="tooltips" title="Password must include 1 uppercase letter, 1 lower case letter, 1 number, and at least 8 characters">?</span>
     <br>
     <input type="submit" name="submit" value="submit"/>
 </form>
