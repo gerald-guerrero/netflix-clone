@@ -1,6 +1,5 @@
 
 from flask import Blueprint, render_template, url_for, redirect, request, session, flash
-from werkzeug.security import generate_password_hash, check_password_hash
 from models import db, Users, Movies_Shows, Favorites
 
 pages = Blueprint("pages", __name__)
@@ -43,7 +42,7 @@ def login_input():
 
     user_db = Users.query.filter_by(username=username_input).first()
     
-    if user_db and check_password_hash(user_db.password, password_input):
+    if user_db and user_db.check_password(password_input):
         flash("You are now logged in")
         session["name"] = user_db.username
         session["watch_history"] = []
@@ -70,13 +69,12 @@ def register_input():
     """
     username_input = request.form.get("username")
     password_input = request.form.get("password")
-    password_hashed = generate_password_hash(password_input)
 
     user_db = Users.query.filter_by(username=username_input).first()
 
     if user_db is None:
         flash("User is now registered")
-        user = Users(username = username_input, password = password_hashed)
+        user = Users(username_input, password_input)
         db.session.add(user)
         db.session.commit()
     else:
@@ -184,7 +182,7 @@ def favoritesUpdate(movies_shows_id):
         user.favorites.filter_by(movies_shows_id=movies_shows_id).delete()
     else:
         print("media will be added to favorites")
-        favEntry = Favorites(user_id=user.id, movies_shows_id = movies_shows_id)
+        favEntry = Favorites(user.id, movies_shows_id)
         db.session.add(favEntry)
     
     db.session.commit()

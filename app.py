@@ -4,7 +4,7 @@ from flask_session import Session
 from dotenv import load_dotenv, find_dotenv
 import os
 from pages import pages
-from models import db, Users
+from models import db
 
 
 app = Flask(__name__)
