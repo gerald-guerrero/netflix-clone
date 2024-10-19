@@ -5,7 +5,7 @@ from dotenv import load_dotenv, find_dotenv
 import os
 from pages import pages
 from models import db
-
+from datetime import timedelta
 
 app = Flask(__name__)
 
@@ -20,6 +20,8 @@ db.init_app(app)
 
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=5)
+
 Session(app)
 
 app.register_blueprint(pages)
