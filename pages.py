@@ -11,8 +11,16 @@ def index():
     route for homepage and serves as main directory for app containing links for relevant pages
     can be accessed without being signed in
     """
-    
+
     return render_template("index.html")
+
+@pages.app_errorhandler(404)
+def page_not_found(e):
+    return render_template("404.html"), 404
+
+@pages.app_errorhandler(500)
+def internal_server_error(e):
+    return render_template('500.html'), 500
 
 @pages.route("/login")
 def login():

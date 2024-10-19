@@ -8,23 +8,25 @@
 {% endblock %}
 
 {% block body %}
-<h1>Login</h1>
-<br>
-{% if error %}
-    <p>{{ error }}</p>
-{% endif %}
-<form method="POST" action="login_input">
-    <input type="text" name="username" placeholder="Username" minlength="1" maxlength="25" required/>
+<div class="no_menu">
+    <h1>Login</h1>
     <br>
-    <input type="password" name="password" placeholder="Password" minlength="1" maxlength="25" required/>
-    <br>
-    <input type="submit" name="submit" value="submit"/>
-</form>
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-        {% for message in messages %}
-            <p>{{ message }}</p>
-        {% endfor %}
+    {% if error %}
+        <p>{{ error }}</p>
     {% endif %}
-{% endwith %}
+    <form method="POST" action="login_input">
+        <input type="text" name="username" placeholder="Username" minlength="1" maxlength="25" required/>
+        <br>
+        <input type="password" name="password" placeholder="Password" minlength="1" maxlength="25" required/>
+        <br>
+        <input type="submit" name="submit" value="submit"/>
+    </form>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
 {% endblock %}

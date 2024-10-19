@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{% endblock %}
+
+{% block menu %}
+{# overriding menu block from base.html so the page links do not show on error page #}
+{% endblock %}
+
+{% block body %}
+<div class="no_menu">
+    <h1>500 Internal Server Error</h1>
+</div>
+{% endblock %}
