@@ -200,11 +200,9 @@ def favorites():
         return redirect(url_for("pages.login"))
     
     user = Users.query.filter_by(username=session["name"]).first()
-    favorites = user.favorites.all()
-    movies_shows = []
-    for entry in favorites:
-        movies_shows.append(Movies_Shows.query.filter_by(id = entry.movies_shows_id).first())
-    return render_template("list.html", catalog = movies_shows, page_title = "Favorites")
+    favorites_ids = user.favorites.with_entities(Favorites.movies_shows_id)
+    favorites_list = Movies_Shows.query.filter(Movies_Shows.id.in_(favorites_ids)).all()
+    return render_template("list.html", catalog = favorites_list, page_title = "Favorites")
 
 
 @pages.route("/history")
