@@ -1,6 +1,6 @@
 
 from flask import Blueprint, render_template, url_for, redirect, request, session, flash
-from models import db, Users, Movies_Shows, Favorites
+from models import db, Users, Movies_Shows, Favorites, History
 
 pages = Blueprint("pages", __name__)
 
@@ -45,7 +45,6 @@ def login_input():
     if user_db and user_db.check_password(password_input):
         flash("You are now logged in")
         session["name"] = user_db.username
-        session["watch_history"] = []
     else:
         flash("Incorrect credentials")
         return redirect(url_for("pages.login"))
@@ -90,7 +89,6 @@ def logout():
     logs out by removing "name" attribute from session["name"]
     """
     session.pop("name", None)
-    session.pop("watch_history", None)
     return redirect(url_for("pages.index"))
 
 @pages.route("/list")
@@ -151,6 +149,7 @@ def detail(movies_shows_id):
     
     movie_show = Movies_Shows.query.filter_by(id=movies_shows_id).first()
     user = Users.query.filter_by(username=session["name"]).first()
+    isFavorite = user.favorites.filter_by(movies_shows_id=movies_shows_id).first()
     if(user.favorites.filter_by(movies_shows_id=movies_shows_id).first()):
         print("Is in Favorites")
         favoriteLabel = "Remove from Favorites"
@@ -158,37 +157,34 @@ def detail(movies_shows_id):
         print("Not in favorites")
         favoriteLabel = "Add to Favorites"
 
-    if "watch_history" in session:
-        session["watch_history"].insert(0, {"id": movie_show.id, "title": movie_show.title})
-        print(session["watch_history"])
+    history_entry = History(user.id, movies_shows_id)
+    db.session.add(history_entry)
+    db.session.commit()
+    return render_template("detail.html", movie_show = movie_show, isFavorite = isFavorite, favoriteLabel = favoriteLabel)
 
-    return render_template("detail.html", movie_show = movie_show, favoriteLabel = favoriteLabel)
-
-@pages.route("/favoritesUpdate/<int:movies_shows_id>")
+@pages.route("/favoritesUpdate/<int:movies_shows_id>", methods=["POST"])
 def favoritesUpdate(movies_shows_id):
     """
-    Connected to favorites button on the "/detail" page. Checks if the current movie or show is
-    already in the current user's favorites with the provided movies_shows_id. The current movie 
-    or show is added or removed accordingly based on this. 
-    The first entry in the watch history is removed to prevent favoritesUpdate from creating a 
-    duplicate entry. The entry will be added again when pages.detail is reloaded
+    Connected to favorites checkbox on the "/detail" page. When there is a change in the checkbox, it triggers
+    the favoritesUpdate route which will take id and use it to add the entry to the user's favorites if it is 
+    not already there, or it will remove it from the favorites if it already exists. The favorites update occurs
+    in the backend, so page reloads and redirections are not needed, so the route returns an empty response and 
+    not a template
     """
     if "name" not in session:
         return redirect(url_for("pages.login"))
 
     user = Users.query.filter_by(username=session["name"]).first()
-    if (user.favorites.filter_by(movies_shows_id=movies_shows_id).first()):
+    entry = user.favorites.filter_by(movies_shows_id=movies_shows_id).first()
+    if (entry):
         print("Media will be removed from favorites")
-        user.favorites.filter_by(movies_shows_id=movies_shows_id).delete()
+        db.session.delete(entry)
     else:
         print("media will be added to favorites")
-        favEntry = Favorites(user.id, movies_shows_id)
-        db.session.add(favEntry)
-    
-    db.session.commit()
-    session["watch_history"].pop(0)
+        db.session.add(Favorites(user.id, movies_shows_id))
 
-    return redirect(url_for("pages.detail", movies_shows_id = movies_shows_id))
+    db.session.commit()
+    return ""
 
 @pages.route("/favorites")
 def favorites():
@@ -208,10 +204,15 @@ def favorites():
 @pages.route("/history")
 def history():
     """
-    Displays a list of links from session["watch_history] based on the movies_shows entries
-    that were clicked
+    Displays a list of links using ids from the History table and titles from the
+    Movies_Shows table to show the user their watch history
     """
     if "name" not in session:
         return redirect(url_for("pages.login"))
     
-    return render_template("history.html")
+    user = Users.query.filter_by(username=session["name"]).first()
+
+    history = History.query.filter_by(user_id = user.id).join(Movies_Shows, History.movies_shows_id == Movies_Shows.id).add_columns(History.movies_shows_id, Movies_Shows.title).all()
+    history.reverse()
+
+    return render_template("history.html", history = history)

@@ -82,3 +82,8 @@ ul {
 .no_menu {
     text-align: center;
 }
+
+.favorite_label, .favorite_check {
+    display: inline-flex;
+    margin-right: 10px;
+}

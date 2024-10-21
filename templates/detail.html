@@ -11,6 +11,14 @@
     <li><p>Description: {{ movie_show.description }}</p></li>
     <li><p>Release Date: {{ movie_show.release_date }}</p></li>
     <li><p>Duration: {{ movie_show.duration }} minutes</p></li>
-    <li><a href="{{ url_for('pages.favoritesUpdate', movies_shows_id=movie_show.id) }}"><button>{{ favoriteLabel }}</button></a></li>
+    
+    <li>
+        <p class="favorite_label">Your Favorites:</p>
+        <form action="{{ url_for('pages.favoritesUpdate', movies_shows_id=movie_show.id) }}" method="POST" target="no_reload">
+            <input  type="checkbox" class="favorite_check" onchange="this.form.submit()" {% if isFavorite %} checked {% endif %}/>
+        </form>
+    </li>
 </ul>
+
+<iframe name="no_reload" style="display: none;"></iframe>
 {% endblock %}

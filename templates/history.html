@@ -6,9 +6,9 @@
 {% block body %}
 <h1>Watch history</h1>
 <ul>
-    {% for entry in session['watch_history'] %}
+    {% for entry in history %}
     <li>
-        <a class="history-link" href="{{ url_for('pages.detail', movies_shows_id=entry.id) }}">{{ entry.title }}</a>
+        <a class="history-link" href="{{ url_for('pages.detail', movies_shows_id=entry.movies_shows_id) }}">{{ entry.title }}</a>
     </li>
     {% endfor %}
 </ul>
