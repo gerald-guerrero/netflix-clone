@@ -100,9 +100,9 @@ def list():
     if "name" not in session:
         return redirect(url_for("pages.login"))
      
-    movies_shows = Movies_Shows.query.all()
+    catalog = Movies_Shows.query.all()
     page_title = "Full Catalog"
-    return render_template("list.html", catalog = movies_shows, page_title = page_title)
+    return render_template("list.html", catalog = catalog, page_title = page_title)
 
 @pages.route("/list/<filter>+<name>")
 def listFiltered(filter, name):
@@ -114,15 +114,19 @@ def listFiltered(filter, name):
     if "name" not in session:
         return redirect(url_for("pages.login"))
     
+    filter_options = {
+        "title": Movies_Shows.title.like(f"%{name}%"),
+        "genre": Movies_Shows.genre == name
+    }
+
+    catalog = Movies_Shows.query.filter(filter_options[filter]).all()
 
     if (filter == "title"):
-        movies_shows = Movies_Shows.query.filter(Movies_Shows.title.like(f"%{name}%"))
         page_title = "Search Results For: " + name
     elif(filter == "genre"):
-        movies_shows = Movies_Shows.query.filter_by(genre = name)
         page_title = "Filtered By Genre: " + name
 
-    return render_template("list.html", catalog=movies_shows, page_title = page_title)
+    return render_template("list.html", catalog=catalog, page_title = page_title)
 
 @pages.route("/title", methods=["GET"])
 def title():
@@ -147,20 +151,15 @@ def detail(movies_shows_id):
     if "name" not in session:
         return redirect(url_for("pages.login"))
     
+    user = current_user()
     movie_show = Movies_Shows.query.filter_by(id=movies_shows_id).first()
-    user = Users.query.filter_by(username=session["name"]).first()
     isFavorite = user.favorites.filter_by(movies_shows_id=movies_shows_id).first()
-    if(user.favorites.filter_by(movies_shows_id=movies_shows_id).first()):
-        print("Is in Favorites")
-        favoriteLabel = "Remove from Favorites"
-    else:
-        print("Not in favorites")
-        favoriteLabel = "Add to Favorites"
 
     history_entry = History(user.id, movies_shows_id)
     db.session.add(history_entry)
     db.session.commit()
-    return render_template("detail.html", movie_show = movie_show, isFavorite = isFavorite, favoriteLabel = favoriteLabel)
+
+    return render_template("detail.html", movie_show = movie_show, isFavorite = isFavorite)
 
 @pages.route("/favoritesUpdate/<int:movies_shows_id>", methods=["POST"])
 def favoritesUpdate(movies_shows_id):
@@ -174,13 +173,11 @@ def favoritesUpdate(movies_shows_id):
     if "name" not in session:
         return redirect(url_for("pages.login"))
 
-    user = Users.query.filter_by(username=session["name"]).first()
+    user = current_user()
     entry = user.favorites.filter_by(movies_shows_id=movies_shows_id).first()
     if (entry):
-        print("Media will be removed from favorites")
         db.session.delete(entry)
     else:
-        print("media will be added to favorites")
         db.session.add(Favorites(user.id, movies_shows_id))
 
     db.session.commit()
@@ -195,7 +192,7 @@ def favorites():
     if "name" not in session:
         return redirect(url_for("pages.login"))
     
-    user = Users.query.filter_by(username=session["name"]).first()
+    user = current_user()
     favorites_ids = user.favorites.with_entities(Favorites.movies_shows_id)
     favorites_list = Movies_Shows.query.filter(Movies_Shows.id.in_(favorites_ids)).all()
     return render_template("list.html", catalog = favorites_list, page_title = "Favorites")
@@ -210,9 +207,13 @@ def history():
     if "name" not in session:
         return redirect(url_for("pages.login"))
     
-    user = Users.query.filter_by(username=session["name"]).first()
+    user = current_user()
 
     history = History.query.filter_by(user_id = user.id).join(Movies_Shows, History.movies_shows_id == Movies_Shows.id).add_columns(History.movies_shows_id, Movies_Shows.title).all()
     history.reverse()
 
     return render_template("history.html", history = history)
+
+
+def current_user():
+    return Users.query.filter_by(username=session["name"]).first()
